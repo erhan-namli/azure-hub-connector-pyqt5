@@ -19,13 +19,17 @@ class Worker(QtCore.QThread):
 
     any_signal = QtCore.pyqtSignal(int)
 
-    def __init__(self, QLineEdit, ConnectionString):
+    def __init__(self, QLineEdit, ConnectionString, QCheckBox, QLabel):
 
         super(QtCore.QThread, self).__init__()
 
         self.textEditforIncomingMessages = QLineEdit
 
         self.CONNECTION_STRING = ConnectionString
+
+        self.mainUiCheckBox = QCheckBox
+
+        self.labelText = QLabel
 
     
     def message_handler(self, message):
@@ -44,6 +48,11 @@ class Worker(QtCore.QThread):
 
         self.ClientAzure = IoTHubDeviceClient.create_from_connection_string(self.CONNECTION_STRING)
         print(self.CONNECTION_STRING)
+
+        self.mainUiCheckBox.setChecked(True)
+
+        self.labelText.setText("Connection is provided")
+
         print("BURAYA GELDI 2")
 
         while True:
@@ -62,7 +71,11 @@ class ConnectorApp(Ui_MainWindow, QMainWindow, QWidget):
 
         self.AzureMessages = self.ui.lne_IncomingMessages
 
+        self.changeLabelAfterConnection = self.ui.label_3
+
         self.ui.btn_StartCommunicate.clicked.connect(self.startCommunicate)
+
+        self.CheckBox = self.ui.checkBox
 
         self.ui.btn_SendMessage.clicked.connect(self.sendMessagetoAzure)
 
@@ -73,7 +86,7 @@ class ConnectorApp(Ui_MainWindow, QMainWindow, QWidget):
 
         self.CONNECTION_STRING = self.ui.lne_ConnectionString.text()
 
-        self.thread = Worker(QLineEdit=self.AzureMessages, ConnectionString= self.CONNECTION_STRING)
+        self.thread = Worker(QLineEdit=self.AzureMessages, ConnectionString= self.CONNECTION_STRING, QCheckBox=self.CheckBox, QLabel= self.changeLabelAfterConnection)
 
         self.thread.start()
 
