@@ -15,6 +15,10 @@ This app connect your device to Azure IoT Hub
   ```bash
  python main.py
  ```
+
+ ## Work Diagram
+
+ ![part](gui-part.jpg)
  
  ## Libraries
  - GUI library : https://pypi.org/project/PyQt5/
